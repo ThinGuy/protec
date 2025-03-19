@@ -2,7 +2,7 @@
 
 ## Ubuntu Pro-enabled Trusted Environment for CAC
 
-**Version 1.1**
+**Version 2.0**
 
 ## Contents
 
@@ -12,6 +12,7 @@
 - [Login Authentication](#1-login-authentication)
 - [Network Access (802.1X)](#2-network-access-8021x)
 - [Browser-Based Authentication](#3-browser-based-authentication)
+- [SSH Authentication](#4-ssh-authentication)
 
 [Key Features](#key-features)
 - [Automated CAC Detection](#automated-cac-detection)
@@ -53,6 +54,7 @@ ProTEC streamlines CAC configuration for:
 * System Login Authentication via PAM (Pluggable Authentication Modules)  
 * Browser Integration for Firefox, Google Chrome, and Microsoft Edge  
 * 802.1X Network Access Control for both wired and wireless environments
+* SSH Authentication with PKCS#11 support
 
 By automating these configurations through the Ubuntu Pro Client, ProTEC simplifies deployment, reduces human error, and ensures secure identity-based access across Ubuntu systems.
 
@@ -76,6 +78,12 @@ By automating these configurations through the Ubuntu Pro Client, ProTEC simplif
 * Configures Firefox, Chrome, and Edge to enforce CAC-based authentication for secure web portals and DoD-specific websites.  
 * Reduces phishing risks by ensuring only CAC-verified identities can access sensitive sites.
 
+### 4. SSH Authentication {#4-ssh-authentication}
+
+* Configures SSH to use the PKCS#11 module for certificate-based authentication.
+* Enables secure remote access using CAC without password entry.
+* Supports public key extraction for authorized_keys configuration on remote systems.
+
 ---
 
 ## Key Features {#key-features}
@@ -86,19 +94,19 @@ Guides users through connecting a CAC reader and inserting their card. Detects a
 
 ### Certificate Extraction {#certificate-extraction}
 
-Securely extracts CAC certificates for authentication, ensuring proper identification for system login and web access.
+Securely extracts CAC certificates for authentication, ensuring proper identification for system login and web access. Supports multiple extraction methods for greater compatibility.
 
 ### PAM Integration {#pam-integration}
 
-Automatically configures PAM to support CAC authentication for system logins, ensuring compliance with DoD security protocols.
+Automatically configures PAM to support CAC authentication for system logins, ensuring compliance with DoD security protocols. Uses pam_pkcs11 with proper certificate mapping.
 
 ### Browser Support {#browser-support}
 
-Seamlessly configures Firefox, Chrome, and Edge to enable CAC-based authentication for government portals and secure websites.
+Seamlessly configures Firefox, Chrome, and Edge to enable CAC-based authentication for government portals and secure websites. Includes proper NSS database configuration.
 
 ### 802.1X Support for Wired & Wireless Networks {#8021x-support-for-wired--wireless-networks}
 
-Ensures secure network access with WPA2-Enterprise/EAP-TLS for enhanced ProTECion in CAC environments.
+Ensures secure network access with WPA2-Enterprise/EAP-TLS for enhanced ProTECion in CAC environments. Provides both NetworkManager and wpa_supplicant configuration options.
 
 ### Flexible User Mapping {#flexible-user-mapping}
 
@@ -190,6 +198,11 @@ After installation, the script automatically runs verification tests to ensure p
 4. **Browser Configuration** (Firefox example):
    ```
    modutil -dbdir sql:~/.mozilla/firefox/*.default-release -list
+   ```
+
+5. **SSH Configuration**:
+   ```
+   grep PKCS11Provider ~/.ssh/config
    ```
 
 ### Troubleshooting {#troubleshooting}
