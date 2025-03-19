@@ -6,7 +6,7 @@
 
 ## Ubuntu Pro-enabled Trusted Environment for CAC
 
-ProTEC is an automation tool that seamlessly integrates smart cards, including the U.S. Department of Defense (DoD) Common Access Cards (CAC)m with Ubuntu systems. Leveraging Ubuntu's security-first design and robust compliance features, ProTEC ensures reliable, secure access for CAC-enabled environments while meeting stringent government standards.
+ProTEC is an automation tool designed to seamlessly integrate U.S. Department of Defense (DoD) Common Access Cards (CAC) with Ubuntu systems. Leveraging Ubuntu's security-first design and robust compliance features, ProTEC ensures reliable, secure access for CAC-enabled environments while meeting stringent government standards.
 
 ![ProTEC Banner](https://assets.ubuntu.com/v1/8dd99b80-Shield_ubuntu.svg)
 
@@ -17,8 +17,9 @@ ProTEC streamlines CAC configuration for:
 - **System Login Authentication** via PAM (Pluggable Authentication Modules)
 - **Browser Integration** for Firefox, Google Chrome, and Microsoft Edge
 - **802.1X Network Access Control** for both wired and wireless environments
+- **SSH Authentication** with PKCS#11 support
 
-By automating these configurations through the Ubuntu Pro Client, ProTEC simplifies deployment, reduces human error, and ensures secure identity-based access across Ubuntu systems.
+By automating these configurations, ProTEC simplifies deployment, reduces human error, and ensures secure identity-based access across Ubuntu systems.
 
 ## Security Components
 
@@ -30,10 +31,17 @@ By automating these configurations through the Ubuntu Pro Client, ProTEC simplif
 ### 2. Network Access (802.1X)
 - Secures both wired and wireless network connections by authenticating devices with CAC certificates
 - Ensures network connections are encrypted and controlled based on verified identity
+- Supports both NetworkManager and wpa_supplicant configurations
 
 ### 3. Browser-Based Authentication
 - Configures Firefox, Chrome, and Edge to enforce CAC-based authentication for secure web portals and DoD-specific websites
 - Reduces phishing risks by ensuring only CAC-verified identities can access sensitive sites
+- Sets up proper NSS database configuration for certificate integration
+
+### 4. SSH Authentication
+- Enables certificate-based SSH authentication without passwords
+- Configures PKCS#11 module integration for SSH clients
+- Provides guidance for authorized_keys setup on remote systems
 
 ## Prerequisites
 
@@ -47,8 +55,8 @@ By automating these configurations through the Ubuntu Pro Client, ProTEC simplif
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/canonical/ubuntu-protec.git
-   cd ubuntu-protec
+   git clone https://github.com/ThinGuy/protec.git
+   cd protec
    ```
 
 2. Run the installation script with root privileges:
@@ -64,7 +72,7 @@ For comprehensive documentation, see the [ProTEC.md](ProTEC.md) file included in
 
 ## Development Testing
 
-For testing without an actual CAC card, see [Appendix II: Using YubiKey 5 Security Keys for CAC Testing](ProTEC.md#appendix-ii.-using-yubikey-5-security-keys-for-cac-testing) in the documentation.
+For testing without an actual CAC card, see [Appendix II: Using YubiKey 5 Security Keys for CAC Testing](ProTEC.md#appendix-ii-using-yubikey-5-security-keys-for-cac-testing) in the documentation.
 
 ## Troubleshooting
 
@@ -104,7 +112,7 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 For commercial support and questions about Ubuntu Pro, please contact [Canonical](https://ubuntu.com/contact-us).
 
-For issues with this tool, please [file an issue](https://github.com/canonical/ubuntu-protec/issues) on the GitHub repository.
+For issues with this tool, please [file an issue](https://github.com/ThinGuy/protec/issues) on the GitHub repository.
 
 ---
 
