@@ -61,8 +61,13 @@ This document provides solutions for common issues that may be encountered when 
    ```bash
    pkcs11-tool --module /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so -O
    ```
-4. Check if your card is locked due to incorrect PIN attempts
-5. For YubiKey testing, verify PIV mode is enabled:
+4. Try the alternative p11tool method:
+   ```bash
+   p11tool --list-tokens
+   p11tool --list-all-certs "pkcs11:..."
+   ```
+5. Check if your card is locked due to incorrect PIN attempts
+6. For YubiKey testing, verify PIV mode is enabled:
    ```bash
    ykman info
    ```
@@ -87,7 +92,15 @@ This document provides solutions for common issues that may be encountered when 
    ```bash
    pklogin_finder debug
    ```
-4. As a last resort, restore the backup of your PAM config if available:
+4. Check the pam_pkcs11 configuration:
+   ```bash
+   cat /etc/pam_pkcs11/pam_pkcs11.conf
+   ```
+5. Verify certificate mapping files:
+   ```bash
+   cat /etc/pam_pkcs11/mapper/*.map
+   ```
+6. As a last resort, restore the backup of your PAM config if available:
    ```bash
    sudo cp /path/to/protec_backups/common-auth.TIMESTAMP /etc/pam.d/common-auth
    ```
@@ -120,6 +133,10 @@ This document provides solutions for common issues that may be encountered when 
 3. Try manually adding the module:
    ```bash
    modutil -dbdir sql:~/.mozilla/firefox/*.default-release -add "CAC Module" -libfile /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so
+   ```
+4. Import your certificate into the browser's certificate store:
+   ```bash
+   certutil -A -d sql:~/.mozilla/firefox/*.default/ -n "CAC Certificate" -t "P,," -i /path/to/certificate.pem
    ```
 
 ### Browser Crashes When Accessing CAC Sites
@@ -169,7 +186,11 @@ This document provides solutions for common issues that may be encountered when 
    ```bash
    sudo systemctl restart wpa_supplicant@wlan0
    ```
-5. Verify network support for EAP-TLS (some networks only support PEAP or EAP-TTLS)
+5. If using NetworkManager, check connection details:
+   ```bash
+   nmcli connection show "CAC-8021X-SSID"
+   ```
+6. Verify network support for EAP-TLS (some networks only support PEAP or EAP-TTLS)
 
 ### Connection Drops Frequently
 
@@ -192,6 +213,52 @@ This document provides solutions for common issues that may be encountered when 
    ```bash
    sed -i 's/ctrl_interface=.*/ctrl_interface=DIR=\/var\/run\/wpa_supplicant GROUP=netdev\nap_scan=1\nfast_reauth=1\neapol_version=2\neventhistory=1/' /etc/wpa_supplicant/wpa_supplicant-wlan0.conf
    ```
+
+## SSH Authentication Issues
+
+### SSH Key Not Recognized
+
+**Symptoms:**
+- SSH authentication fails with "No suitable authentication method found"
+- PKCS#11 provider errors in SSH
+
+**Solutions:**
+1. Verify SSH configuration:
+   ```bash
+   cat ~/.ssh/config | grep PKCS11Provider
+   ```
+2. Extract the public key to check it's valid:
+   ```bash
+   ssh-keygen -D /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so
+   ```
+3. Make sure the public key is correctly installed in `~/.ssh/authorized_keys` on the remote system
+4. Enable verbose SSH logging for more details:
+   ```bash
+   ssh -v -I /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so user@remote-host
+   ```
+5. Check for correct permissions on SSH files:
+   ```bash
+   chmod 700 ~/.ssh
+   chmod 600 ~/.ssh/config
+   ```
+
+### SSH Connection Drops After Card Removal
+
+**Symptoms:**
+- SSH session terminates when CAC is removed
+- Unable to reconnect without reinserting card
+
+**Solutions:**
+1. Configure SSH to use agent forwarding to maintain connections:
+   ```bash
+   echo "AddKeysToAgent yes" >> ~/.ssh/config
+   ```
+2. Use ssh-agent to cache credentials temporarily:
+   ```bash
+   eval $(ssh-agent)
+   ssh-add -s /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so
+   ```
+3. For extended sessions, consider using tools like `screen` or `tmux` on the remote server
 
 ## System-Wide Issues
 
@@ -228,56 +295,4 @@ grep -r "pkcs11" /var/log/* 2>/dev/null > ~/protec-logs/pkcs11-mentions.log
 tar -czf protec-logs.tar.gz ~/protec-logs
 ```
 
-## Testing With YubiKey
-
-### YubiKey Not Working for Testing
-
-**Symptoms:**
-- YubiKey is detected but not usable for PIV/CAC testing
-- Certificate extraction fails with YubiKey
-
-**Solutions:**
-1. Reset the PIV applet:
-   ```bash
-   ykman piv reset
-   ```
-   **⚠️ Warning: This will erase all certificates on the YubiKey PIV applet**
-2. Generate a new test certificate:
-   ```bash
-   ykman piv generate-key 9a public_key.pem
-   ykman piv generate-certificate --subject "CN=Test User" 9a public_key.pem
-   ```
-3. Verify the YubiKey is working with PIV:
-   ```bash
-   ykman piv info
-   ```
-
-### Certificate Visible But Authentication Fails
-
-**Symptoms:**
-- YubiKey certificate shows up in tools and browsers
-- Authentication fails with errors about invalid or untrusted certificates
-
-**Solutions:**
-1. For testing purposes, you may need to add the certificate to the trusted CA store:
-   ```bash
-   ykman piv export-certificate 9a cert.pem
-   sudo cp cert.pem /usr/local/share/ca-certificates/yubikey-test.crt
-   sudo update-ca-certificates
-   ```
-2. Check certificate details for validity:
-   ```bash
-   openssl x509 -in cert.pem -text -noout
-   ```
-3. Ensure the certificate is properly mapped to a user account:
-   ```bash
-   sudo nano /etc/pam_pkcs11/pam_pkcs11.conf
-   ```
-
-## Contact Support
-
-If you've tried these troubleshooting steps and still experience issues, please:
-
-1. Check the [GitHub issues](https://github.com/canonical/ubuntu-protec/issues) to see if others have reported similar problems
-2. File a new issue with detailed information about your setup and the troubleshooting steps you've tried
-3. Contact Canonical support if you have an Ubuntu Pro subscription
+## Testing With Yubi
