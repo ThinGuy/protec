@@ -8,8 +8,6 @@
 
 ProTEC is an automation tool designed to seamlessly integrate U.S. Department of Defense (DoD) Common Access Cards (CAC) with Ubuntu systems. Leveraging Ubuntu's security-first design and robust compliance features, ProTEC ensures reliable, secure access for CAC-enabled environments while meeting stringent government standards.
 
-![ProTEC Banner](https://assets.ubuntu.com/v1/8dd99b80-Shield_ubuntu.svg)
-
 ## Features
 
 ProTEC streamlines CAC configuration for:
