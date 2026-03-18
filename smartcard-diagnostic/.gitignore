@@ -1,0 +1,42 @@
+# Flutter
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+*.snap
+
+# Dart
+.pub/
+pubspec.lock
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*~
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+*.egg
+.venv/
+test-env/
+
+# Coverage
+coverage/
+.coverage
+
+# Snap build artifacts
+parts/
+prime/
+stage/
+*.snap
+
+# OS
+.DS_Store
+Thumbs.db

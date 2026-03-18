@@ -40,9 +40,12 @@ CRITICAL:
 - [x] Status card and card info widgets (Yaru themed)
 - [x] Home screen with Canonical UI guidelines
 - [x] Yaru theme integration
+- [x] .gitignore file
+- [x] Testing documentation
+- [x] Build instructions
 
 ## In Progress
-- [ ] Test snap build and D-Bus integration
+- [ ] Test snap build locally
 
 ## Guardrails
 READ BEFORE EVERY TASK:
@@ -61,7 +64,7 @@ READ BEFORE EVERY TASK:
 None
 
 ## Next Steps
-1. Test snap build and D-Bus integration
+1. Test snap build locally
 2. Create remaining Flutter screens
 3. Add tests
 
