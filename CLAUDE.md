@@ -12,12 +12,11 @@ Working Branch: claude/snap-smartcard
 Protected Branches: main (never commit directly)
 
 ## Naming Convention
-CRITICAL - Must follow everywhere:
+CRITICAL:
 - Use: "smartcard" or "smart card"
 - Use: "PIV card" for Personal Identity Verification
-- Avoid: DoD, CAC, military references (except in testing docs)
+- Avoid: DoD, CAC, military references (except testing docs)
 - Target: Government and Enterprise PKI deployments
-- Branding: Professional, vendor-neutral, internationally applicable
 
 ## Project Components
 1. protec.py - Standalone automation script (existing)
@@ -28,40 +27,39 @@ CRITICAL - Must follow everywhere:
 - [x] ProTEC automation script
 - [x] ProTEC documentation
 - [x] CLAUDE.md initialization
-- [x] Smartcard diagnostic tool foundation
+- [x] Directory structure creation
+- [x] Initial file scaffolding
 
 ## In Progress
-- [ ] Repository structure for diagnostic tool
+- [ ] Implement D-Bus monitor service
 
 ## Guardrails
-CRITICAL - READ BEFORE EVERY TASK:
-1. Always read CLAUDE.md before making any changes
+READ BEFORE EVERY TASK:
+1. Always read CLAUDE.md before making changes
 2. Never commit to main branch
 3. Only commit to: claude/snap-smartcard
-4. Never mix prompts with terminal commands in responses
-5. Always provide full code blocks - never ask user to edit
-6. Update CLAUDE.md after every task completion
-7. Preserve existing ProTEC files - do not modify unless instructed
-8. All new code goes in smartcard-diagnostic/ subdirectory
-9. Use "smartcard" terminology - avoid DoD/CAC/military references
-10. Target professional government/enterprise market
+4. Never mix prompts with terminal commands
+5. Always provide full code blocks
+6. Update CLAUDE.md after task completion
+7. Preserve existing ProTEC files
+8. All new code in smartcard-diagnostic/
+9. Use "smartcard" terminology
+10. Target professional market
 
 ## Known Issues
-None yet
+None
 
 ## Next Steps
-1. Create smartcard-diagnostic/ directory structure
-2. Create snapcraft.yaml
-3. Implement D-Bus service
-4. Create Flutter project structure
+1. Implement D-Bus monitor service
+2. Create Flutter UI
+3. Implement diagnostic scripts
+4. Add tests
 
 ## Dependencies Status
-Existing ProTEC dependencies: installed
-New snap dependencies: not yet installed
-- Flutter SDK: Required
-- Python 3: Required (already present)
-- snapcraft: Required
+- Python 3: Present
+- Flutter SDK: Not installed
+- snapcraft: Not installed
 
 ## Testing Status
-ProTEC script: tested
+ProTEC: tested
 Smartcard diagnostic: no tests yet

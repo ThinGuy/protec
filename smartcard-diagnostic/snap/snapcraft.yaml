@@ -1,64 +1,91 @@
 name: smartcard-diagnostic
-base: core22
-version: '0.1.0'
-summary: Smart Card Diagnostic Tool for Ubuntu
+base: core24
+version: '2.0.0'
+summary: Smart Card Diagnostic Tool
 description: |
-  A professional diagnostic application for smart card testing and monitoring
-  on Ubuntu systems. Designed for government and enterprise PKI deployments.
+  Professional diagnostic and monitoring tool for government and enterprise
+  smart card deployments. Supports PIV cards and enterprise PKI systems.
 
-  Features include real-time reader detection, card identification, PIV
-  validation, FIPS 140-2/140-3 compliance checking, certificate monitoring,
-  and transparent support bundle generation.
+  Features:
+  - Real-time card/reader detection
+  - Certificate validation
+  - FIPS compliance checking
+  - Support bundle generation
 
-grade: devel
+  Designed for Ubuntu Desktop and Ubuntu Core.
+
+grade: stable
 confinement: strict
 
 architectures:
   - build-on: amd64
+  - build-on: arm64
 
 apps:
   smartcard-diagnostic:
-    command: bin/smartcard-diagnostic
+    command: smartcard-diagnostic
+    extensions: [flutter-stable]
     plugs:
       - desktop
       - desktop-legacy
       - wayland
       - x11
-      - opengl
-      - raw-usb
+      - home
+      - removable-media
       - hardware-observe
       - network
-    extensions:
-      - flutter-master
+      - network-bind
+      - raw-usb
+      - opengl
+    environment:
+      LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu:$SNAP/usr/lib
+      PATH: $SNAP/usr/bin:$SNAP/usr/sbin:$PATH
 
-  smartcard-monitor:
+  monitor:
     command: bin/smartcard-monitor
     daemon: simple
+    restart-condition: always
     plugs:
-      - raw-usb
       - hardware-observe
-      - network
+      - raw-usb
+    slots:
+      - dbus-smartcard
+
+slots:
+  dbus-smartcard:
+    interface: dbus
+    bus: session
+    name: com.canonical.SmartCardMonitor
 
 parts:
-  flutter-app:
-    source: .
+  smartcard-diagnostic:
     plugin: flutter
+    source: .
     flutter-target: lib/main.dart
 
-  daemon:
-    source: daemon/
+  monitor-daemon:
     plugin: python
+    source: daemon/
     python-packages:
-      - pydbus
-      - pyscard
+      - dbus-python
+      - pygobject
     stage-packages:
-      - pcscd
-      - pcsc-tools
-      - opensc
-      - libpcsclite1
+      - python3-gi
+      - gir1.2-glib-2.0
+    override-build: |
+      craftctl default
+      mkdir -p $CRAFT_PART_INSTALL/bin
+      cp smartcard_monitor.py $CRAFT_PART_INSTALL/bin/smartcard-monitor
+      chmod +x $CRAFT_PART_INSTALL/bin/smartcard-monitor
 
-  scripts:
-    source: scripts/
-    plugin: dump
-    organize:
-      '*.sh': bin/
+  system-dependencies:
+    plugin: nil
+    stage-packages:
+      - opensc
+      - pcscd
+      - libpam-pkcs11
+      - opensc-pkcs11
+      - gnutls-bin
+      - libccid
+      - pcsc-tools
+      - libpcsclite1

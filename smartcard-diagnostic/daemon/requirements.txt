@@ -1,3 +1,2 @@
-pydbus>=0.6.0
-pyscard>=2.0.0
-PyGObject>=3.42.0
+dbus-python>=1.2.0
+PyGObject>=3.40.0
