@@ -1,0 +1,22 @@
+name: smartcard_diagnostic
+description: Professional smart card diagnostic tool
+version: 2.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dbus: ^0.7.0
+  yaru: ^1.0.0
+  yaru_icons: ^2.0.0
+  yaru_widgets: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true

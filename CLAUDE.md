@@ -33,9 +33,16 @@ CRITICAL:
 - [x] smartcard_monitor.py implementation
 - [x] D-Bus service file
 - [x] Detection shell scripts
+- [x] Implement Flutter home screen UI
+- [x] Card info, test result, health status models
+- [x] D-Bus client service
+- [x] Smart card service with detection
+- [x] Status card and card info widgets (Yaru themed)
+- [x] Home screen with Canonical UI guidelines
+- [x] Yaru theme integration
 
 ## In Progress
-- [ ] Implement Flutter home screen UI
+- [ ] Test snap build and D-Bus integration
 
 ## Guardrails
 READ BEFORE EVERY TASK:
@@ -54,10 +61,9 @@ READ BEFORE EVERY TASK:
 None
 
 ## Next Steps
-1. Implement Flutter home screen UI
+1. Test snap build and D-Bus integration
 2. Create remaining Flutter screens
-3. Implement diagnostic scripts
-4. Add tests
+3. Add tests
 
 ## Dependencies Status
 - Python 3: Present
