@@ -1,3 +1,13 @@
-[D-BUS Service]
-Name=com.canonical.SmartCardMonitor
-Exec=/snap/smartcard-diagnostic/current/bin/smartcard-monitor
+[Unit]
+Description=Smart Card Monitor D-Bus Service
+After=graphical-session.target
+
+[Service]
+Type=dbus
+BusName=com.canonical.SmartCardMonitor
+ExecStart=/snap/smartcard-diagnostic/current/bin/smartcard-monitor
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

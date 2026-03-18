@@ -29,9 +29,13 @@ CRITICAL:
 - [x] CLAUDE.md initialization
 - [x] Directory structure creation
 - [x] Initial file scaffolding
+- [x] Implement D-Bus monitor service
+- [x] smartcard_monitor.py implementation
+- [x] D-Bus service file
+- [x] Detection shell scripts
 
 ## In Progress
-- [ ] Implement D-Bus monitor service
+- [ ] Implement Flutter home screen UI
 
 ## Guardrails
 READ BEFORE EVERY TASK:
@@ -50,8 +54,8 @@ READ BEFORE EVERY TASK:
 None
 
 ## Next Steps
-1. Implement D-Bus monitor service
-2. Create Flutter UI
+1. Implement Flutter home screen UI
+2. Create remaining Flutter screens
 3. Implement diagnostic scripts
 4. Add tests
 
