@@ -4,43 +4,53 @@
 2026-03-18
 
 ## Current Phase
-Phase 1: Snap Diagnostic Tool - Foundation
+Phase 1: Smart Card Diagnostic Tool - Foundation
 
 ## Repository Information
 Repository: https://github.com/ThinGuy/protec
-Working Branch: claude/snap-diagnostic
+Working Branch: claude/snap-smartcard
 Protected Branches: main (never commit directly)
+
+## Naming Convention
+CRITICAL - Must follow everywhere:
+- Use: "smartcard" or "smart card"
+- Use: "PIV card" for Personal Identity Verification
+- Avoid: DoD, CAC, military references (except in testing docs)
+- Target: Government and Enterprise PKI deployments
+- Branding: Professional, vendor-neutral, internationally applicable
 
 ## Project Components
 1. protec.py - Standalone automation script (existing)
-2. snap-diagnostic/ - GUI diagnostic tool (new)
+2. smartcard-diagnostic/ - GUI diagnostic tool (new)
 3. ubuntu-pro-integration/ - Pro Client service (future)
 
 ## Completed Tasks
 - [x] ProTEC automation script
 - [x] ProTEC documentation
 - [x] CLAUDE.md initialization
-- [x] Snap diagnostic tool foundation
+- [x] Smartcard diagnostic tool foundation
 
 ## In Progress
-- [ ] Repository structure for snap tool
+- [ ] Repository structure for diagnostic tool
 
 ## Guardrails
 CRITICAL - READ BEFORE EVERY TASK:
 1. Always read CLAUDE.md before making any changes
 2. Never commit to main branch
-3. Only commit to: claude/snap-diagnostic
+3. Only commit to: claude/snap-smartcard
 4. Never mix prompts with terminal commands in responses
 5. Always provide full code blocks - never ask user to edit
 6. Update CLAUDE.md after every task completion
 7. Preserve existing ProTEC files - do not modify unless instructed
-8. All new snap code goes in snap-diagnostic/ subdirectory
+8. All new code goes in smartcard-diagnostic/ subdirectory
+9. Use "smartcard" terminology - avoid DoD/CAC/military references
+10. Target professional government/enterprise market
 
 ## Known Issues
 None yet
 
 ## Next Steps
-1. Create snap-diagnostic/ directory structure
+1. Create smartcard-diagnostic/ directory structure
 2. Create snapcraft.yaml
 3. Implement D-Bus service
 4. Create Flutter project structure
@@ -54,4 +64,4 @@ New snap dependencies: not yet installed
 
 ## Testing Status
 ProTEC script: tested
-Snap diagnostic: no tests yet
+Smartcard diagnostic: no tests yet

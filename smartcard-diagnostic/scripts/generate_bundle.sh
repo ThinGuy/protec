@@ -1,6 +1,7 @@
 #!/bin/bash
 # generate_bundle.sh - Generate diagnostic bundle for support
 # Creates a tarball with system and smart card diagnostic information
+# No sensitive data (PINs, passwords, private keys) is included
 
 set -euo pipefail
 
@@ -57,7 +58,7 @@ generate_bundle() {
     # Package info
     {
         echo "=== Installed Smart Card Packages ==="
-        dpkg -l | grep -iE "opensc|pcsc|pcscd|coolkey|cac|piv|pkcs" 2>/dev/null || echo "No packages found"
+        dpkg -l | grep -iE "opensc|pcsc|pcscd|coolkey|piv|pkcs" 2>/dev/null || echo "No packages found"
     } > "${BUNDLE_DIR}/packages.txt" 2>&1
 
     # Create tarball

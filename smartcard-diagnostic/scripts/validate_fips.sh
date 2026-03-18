@@ -6,9 +6,9 @@ set -euo pipefail
 
 validate_fips() {
     local fips_enabled=false
-    local fips_mode=""
-    local openssl_fips=false
     local kernel_fips=false
+    local openssl_fips=false
+    local fips_mode=""
 
     # Check kernel FIPS mode
     if [ -f /proc/sys/crypto/fips_enabled ]; then

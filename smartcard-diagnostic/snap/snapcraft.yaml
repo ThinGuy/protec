@@ -3,9 +3,12 @@ base: core22
 version: '0.1.0'
 summary: Smart Card Diagnostic Tool for Ubuntu
 description: |
-  A comprehensive diagnostic application for smart card testing and monitoring
-  on Ubuntu systems. Provides GUI-based diagnostics, real-time monitoring,
-  FIPS validation, and certificate bundle generation for CAC/PIV cards.
+  A professional diagnostic application for smart card testing and monitoring
+  on Ubuntu systems. Designed for government and enterprise PKI deployments.
+
+  Features include real-time reader detection, card identification, PIV
+  validation, FIPS 140-2/140-3 compliance checking, certificate monitoring,
+  and transparent support bundle generation.
 
 grade: devel
 confinement: strict

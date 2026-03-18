@@ -5,9 +5,6 @@
 set -euo pipefail
 
 detect_readers() {
-    local readers
-    readers=$(pcsc_scan -n 2>/dev/null || true)
-
     if command -v opensc-tool &>/dev/null; then
         local reader_list
         reader_list=$(opensc-tool --list-readers 2>/dev/null || true)

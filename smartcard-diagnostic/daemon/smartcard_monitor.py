@@ -3,6 +3,9 @@
 
 Monitors smart card reader and card events, exposing status
 information over D-Bus for the Flutter GUI application.
+
+Designed for government and enterprise PKI deployments.
+Supports PIV and other standard smart card types.
 """
 
 import signal
@@ -88,7 +91,10 @@ class SmartCardMonitor:
             try:
                 reader_list = readers()
                 if reader_list:
-                    self._reader_status = f'{{"detected": true, "count": {len(reader_list)}, "readers": {[str(r) for r in reader_list]}}}'
+                    self._reader_status = (
+                        f'{{"detected": true, "count": {len(reader_list)}, '
+                        f'"readers": {[str(r) for r in reader_list]}}}'
+                    )
                     # Try to connect to first reader
                     try:
                         connection = reader_list[0].createConnection()

@@ -7,12 +7,14 @@
 ## Project Components
 
 ### 1. ProTEC Automation Script
-Standalone Python script for automated CAC configuration on Ubuntu systems.
+Standalone Python script for automated smart card authentication configuration on Ubuntu systems.
+Supports PIV and other government/enterprise smart cards.
 See [protec.py](protec.py) and [ProTEC.md](ProTEC.md) for details.
 
 ### 2. Smart Card Diagnostic Tool (Snap)
-GUI diagnostic application for comprehensive smart card testing and monitoring.
-See [snap-diagnostic/](snap-diagnostic/) for details.
+Professional GUI diagnostic application for comprehensive smart card testing and monitoring.
+Designed for government and enterprise PKI deployments.
+See [smartcard-diagnostic/](smartcard-diagnostic/) for details.
 
 ### 3. Ubuntu Pro Client Integration (Future)
 Integration with `ubuntu-pro-client` for `sudo pro enable smartcard`.
