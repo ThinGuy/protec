@@ -121,6 +121,64 @@ opensc-tool -l
 pkcs11-tool --module /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so -O
 ```
 
+## Easy YubiKey Provisioning
+
+For quick testing without manual setup:
+
+### Interactive Menu (Recommended)
+
+```bash
+cd smartcard-diagnostic/scripts
+./yubikey_test_menu.sh
+```
+
+This provides an interactive menu for:
+- Provisioning test cards (PIV, PIV-I, Enterprise PKI, DoD CAC)
+- Viewing YubiKey status
+- Testing detection
+- Resetting PIV to factory defaults
+
+### Command Line Provisioning
+
+```bash
+cd smartcard-diagnostic/scripts
+./provision_yubikey.sh
+```
+
+Follow the interactive prompts to select your test card personality.
+
+### Safety Features
+
+The provisioning tool includes multiple safety checks:
+- Displays current YubiKey serial number, device type, and firmware
+- Shows existing PIV certificates with subject names before erasing
+- Detects and warns about OATH (2FA) accounts on the key
+- Requires typing 'YES' in capitals to proceed
+- Requires serial number confirmation if certificates exist
+- Clear warnings about data loss at every step
+
+### Available Test Personalities
+
+1. **Standard PIV** - NIST SP 800-73-4 compliant Personal Identity Verification
+2. **PIV-I** - PIV-Interoperable for federal contractors
+3. **Generic Enterprise PKI** - Standard corporate smart card format
+4. **DoD CAC Emulation** - U.S. Department of Defense Common Access Card format
+
+All test cards use:
+- PIN: 123456
+- PUK: 12345678
+- 3-year validity
+- Self-signed certificates (testing only)
+
+### Important Warnings
+
+- **ONLY use dedicated test YubiKeys** - never your work or production key
+- Provisioning PERMANENTLY ERASES all PIV data on the YubiKey
+- Do NOT provision work/production authentication keys
+- Test credentials use weak default PINs (not suitable for production)
+- Certificates are self-signed and will not be trusted by systems
+- If you accidentally provision a work key, contact your IT department
+
 ## Testing with DoD Common Access Cards
 
 For organizations with access to DoD CAC cards, these can be used for

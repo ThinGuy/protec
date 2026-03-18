@@ -50,6 +50,11 @@ CRITICAL:
 - [x] Models, services, widgets
 - [x] Snap configuration
 - [x] Documentation
+- [x] YubiKey provisioning script with safety warnings
+- [x] Interactive YubiKey testing menu
+- [x] Multiple smart card personality support (PIV, PIV-I, Enterprise, DoD CAC)
+- [x] Serial number and certificate verification for data protection
+- [x] Updated testing documentation with provisioning guide
 
 ## In Progress
 - [ ] Awaiting user build/test feedback
