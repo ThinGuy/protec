@@ -74,6 +74,7 @@ READ BEFORE EVERY TASK:
 
 ## Known Issues
 - flutter-stable extension not available in snapcraft (fixed: switched to flutter plugin with manual override-build)
+- core24 requires 'platforms' instead of 'architectures' (fixed: changed to platforms syntax)
 
 ## Next Steps
 1. User will retry snap build
