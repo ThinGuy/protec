@@ -78,12 +78,11 @@ parts:
       mv $CRAFT_PART_INSTALL/bin/smartcard_diagnostic $CRAFT_PART_INSTALL/bin/smartcard-diagnostic
 
   monitor-daemon:
-    plugin: python
+    plugin: dump
     source: daemon/
-    python-packages:
-      - dbus-python
-      - pygobject
     stage-packages:
+      - python3
+      - python3-dbus
       - python3-gi
       - gir1.2-glib-2.0
     override-build: |

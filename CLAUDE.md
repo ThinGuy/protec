@@ -75,6 +75,8 @@ READ BEFORE EVERY TASK:
 ## Known Issues
 - flutter-stable extension not available in snapcraft (fixed: switched to flutter plugin with manual override-build)
 - core24 requires 'platforms' instead of 'architectures' (fixed: changed to platforms syntax)
+- pip packages (pygobject, dbus-python) fail to compile in strict confinement (fixed: switched to Ubuntu archive packages python3-dbus, python3-gi)
+- All Python dependencies now from Ubuntu archives for Canonical supportability
 
 ## Next Steps
 1. User will retry snap build
