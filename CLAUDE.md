@@ -73,10 +73,10 @@ READ BEFORE EVERY TASK:
 10. Target professional market
 
 ## Known Issues
-None
+- flutter-stable extension not available in snapcraft (fixed: switched to flutter plugin with manual override-build)
 
 ## Next Steps
-1. Awaiting user build/test feedback
+1. User will retry snap build
 2. Create remaining Flutter screens
 3. Add tests
 
