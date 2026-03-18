@@ -1,0 +1,61 @@
+name: smartcard-diagnostic
+base: core22
+version: '0.1.0'
+summary: Smart Card Diagnostic Tool for Ubuntu
+description: |
+  A comprehensive diagnostic application for smart card testing and monitoring
+  on Ubuntu systems. Provides GUI-based diagnostics, real-time monitoring,
+  FIPS validation, and certificate bundle generation for CAC/PIV cards.
+
+grade: devel
+confinement: strict
+
+architectures:
+  - build-on: amd64
+
+apps:
+  smartcard-diagnostic:
+    command: bin/smartcard-diagnostic
+    plugs:
+      - desktop
+      - desktop-legacy
+      - wayland
+      - x11
+      - opengl
+      - raw-usb
+      - hardware-observe
+      - network
+    extensions:
+      - flutter-master
+
+  smartcard-monitor:
+    command: bin/smartcard-monitor
+    daemon: simple
+    plugs:
+      - raw-usb
+      - hardware-observe
+      - network
+
+parts:
+  flutter-app:
+    source: .
+    plugin: flutter
+    flutter-target: lib/main.dart
+
+  daemon:
+    source: daemon/
+    plugin: python
+    python-packages:
+      - pydbus
+      - pyscard
+    stage-packages:
+      - pcscd
+      - pcsc-tools
+      - opensc
+      - libpcsclite1
+
+  scripts:
+    source: scripts/
+    plugin: dump
+    organize:
+      '*.sh': bin/

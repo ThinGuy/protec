@@ -4,6 +4,20 @@
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-20.04%2B-orange)](https://ubuntu.com/)
 [![Security](https://img.shields.io/badge/Security-CAC%20Ready-brightgreen)](https://ubuntu.com/security)
 
+## Project Components
+
+### 1. ProTEC Automation Script
+Standalone Python script for automated CAC configuration on Ubuntu systems.
+See [protec.py](protec.py) and [ProTEC.md](ProTEC.md) for details.
+
+### 2. Smart Card Diagnostic Tool (Snap)
+GUI diagnostic application for comprehensive smart card testing and monitoring.
+See [snap-diagnostic/](snap-diagnostic/) for details.
+
+### 3. Ubuntu Pro Client Integration (Future)
+Integration with `ubuntu-pro-client` for `sudo pro enable smartcard`.
+Coming soon.
+
 ## Ubuntu Pro-enabled Trusted Environment for CAC
 
 ProTEC is an automation tool designed to seamlessly integrate U.S. Department of Defense (DoD) Common Access Cards (CAC) with Ubuntu systems. Leveraging Ubuntu's security-first design and robust compliance features, ProTEC ensures reliable, secure access for CAC-enabled environments while meeting stringent government standards.
