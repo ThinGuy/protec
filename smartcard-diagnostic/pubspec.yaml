@@ -9,8 +9,6 @@ dependencies:
   flutter:
     sdk: flutter
   dbus: ^0.7.0
-  yaru: '>=1.0.0 <1.2.0'
-  yaru_icons: ^2.0.0
 
 dev_dependencies:
   flutter_test:
