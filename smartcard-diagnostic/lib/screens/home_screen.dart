@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:yaru/yaru.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import '../models/card_info.dart';
 import '../models/health_status.dart';
 import '../services/smartcard_service.dart';
@@ -72,11 +70,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: YaruWindowTitleBar(
+      appBar: AppBar(
         title: const Text('Smart Card Diagnostic'),
         actions: [
           IconButton(
-            icon: const Icon(YaruIcons.settings),
+            icon: const Icon(Icons.settings_outlined),
             onPressed: () {},
             tooltip: 'Settings',
           ),
@@ -116,24 +114,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
     switch (_status) {
       case CardStatus.waiting:
-        icon = YaruIcons.information;
-        color = YaruColors.warmGrey;
+        icon = Icons.info_outline;
+        color = const Color(0xFF757575);
         displayMessage = _message;
         break;
       case CardStatus.detecting:
-        icon = YaruIcons.synchronizing;
-        color = YaruColors.blue;
+        icon = Icons.sync;
+        color = Colors.blue;
         displayMessage = _message;
         animated = true;
         break;
       case CardStatus.detected:
-        icon = YaruIcons.ok_simple;
-        color = YaruColors.success;
+        icon = Icons.check_circle_outline;
+        color = const Color(0xFF0E8420);
         displayMessage = _message;
         break;
       case CardStatus.error:
-        icon = YaruIcons.error;
-        color = YaruColors.error;
+        icon = Icons.error_outline;
+        color = const Color(0xFFC7162B);
         displayMessage = _message;
         break;
     }
@@ -155,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 20,
               child: CircularProgressIndicator(strokeWidth: 2),
             )
-          : const Icon(YaruIcons.window_new),
+          : const Icon(Icons.credit_card_outlined),
       label: Text(_isDetecting ? 'Detecting...' : 'Insert Card'),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
@@ -164,23 +162,24 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildErrorDisplay() {
-    return YaruBanner(
-      color: YaruColors.error,
+    const errorColor = Color(0xFFC7162B);
+    return Container(
       padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFADBD8),
+        border: Border.all(color: errorColor.withOpacity(0.4)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(
-                YaruIcons.error,
-                color: YaruColors.error,
-              ),
+              const Icon(Icons.error_outline, color: errorColor),
               const SizedBox(width: 8),
               Text(
                 'Error Details',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: YaruColors.error,
+                  color: errorColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -216,12 +215,12 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               TextButton.icon(
                 onPressed: _detectCard,
-                icon: const Icon(YaruIcons.refresh),
+                icon: const Icon(Icons.refresh),
                 label: const Text('Retry'),
               ),
               TextButton.icon(
                 onPressed: () {},
-                icon: const Icon(YaruIcons.document_open),
+                icon: const Icon(Icons.folder_open_outlined),
                 label: const Text('View Logs'),
               ),
             ],
@@ -239,12 +238,12 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         OutlinedButton.icon(
           onPressed: () {},
-          icon: const Icon(YaruIcons.system_search),
+          icon: const Icon(Icons.search),
           label: const Text('Run Full Diagnostics'),
         ),
         OutlinedButton.icon(
           onPressed: () {},
-          icon: const Icon(YaruIcons.document_save),
+          icon: const Icon(Icons.save_alt),
           label: const Text('Generate Support Bundle'),
         ),
       ],

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:yaru/yaru.dart';
-import 'package:yaru_icons/yaru_icons.dart';
 import '../models/card_info.dart';
 
 class CardInfoDisplay extends StatelessWidget {
@@ -13,23 +11,24 @@ class CardInfoDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return YaruBanner(
-      color: YaruColors.success,
+    const successColor = Color(0xFF0E8420);
+    return Container(
       padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFFD5F5E3),
+        border: Border.all(color: successColor.withOpacity(0.4)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(
-                YaruIcons.ok_simple,
-                color: YaruColors.success,
-              ),
+              const Icon(Icons.check_circle_outline, color: successColor),
               const SizedBox(width: 8),
               Text(
                 'Card Information',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: YaruColors.success,
+                  color: successColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),

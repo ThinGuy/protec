@@ -3,8 +3,7 @@ import 'package:yaru/yaru.dart';
 import 'screens/home_screen.dart';
 
 void main() async {
-  await YaruWindowTitleBar.ensureInitialized();
-
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const SmartCardDiagnosticApp());
 }
 
