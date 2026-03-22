@@ -56,25 +56,48 @@ slots:
     name: com.canonical.SmartCardMonitor
 
 parts:
-  smartcard-diagnostic:
-    plugin: flutter
+  flutter-setup:
+    plugin: nil
     source: .
-    flutter-target: lib/main.dart
+    override-build: |
+      curl -fsSL https://fvm.app/install.sh | bash
+      export PATH="$HOME/.fvm/default/bin:$HOME/.pub-cache/bin:$PATH"
+      fvm install stable
+      fvm global stable
+      fvm flutter config --enable-linux-desktop
+      fvm flutter doctor
     build-packages:
       - clang
       - cmake
-      - ninja-build
+      - curl
+      - git
       - libgtk-3-dev
+      - ninja-build
       - pkg-config
+      - unzip
+      - xz-utils
+    override-prime: ""
+
+  smartcard-diagnostic:
+    after: [flutter-setup]
+    plugin: nil
+    source: .
+    override-build: |
+      export PATH="$HOME/.fvm/default/bin:$HOME/.pub-cache/bin:$PATH"
+      fvm flutter pub get
+      fvm flutter build linux --release --target lib/main.dart
+      mkdir -p $CRAFT_PART_INSTALL/bin
+      cp -r build/linux/x64/release/bundle/* $CRAFT_PART_INSTALL/bin/
+      mv $CRAFT_PART_INSTALL/bin/smartcard_diagnostic $CRAFT_PART_INSTALL/bin/smartcard-diagnostic
     stage-packages:
       - libgtk-3-0
       - libgdk-pixbuf2.0-0
       - libglib2.0-0
-    override-build: |
-      craftctl default
-      mkdir -p $CRAFT_PART_INSTALL/bin
-      cp -r build/linux/*/release/bundle/* $CRAFT_PART_INSTALL/bin/
-      mv $CRAFT_PART_INSTALL/bin/smartcard_diagnostic $CRAFT_PART_INSTALL/bin/smartcard-diagnostic
+      - libblkid1
+      - libc6
+      - libgcc-s1
+      - libpcre2-8-0
+      - libstdc++6
 
   monitor-daemon:
     plugin: dump
