@@ -1,6 +1,6 @@
 [Unit]
 Description=Smart Card Monitor D-Bus Service
-After=graphical-session.target
+After=pcscd.service pcscd.socket
 
 [Service]
 Type=dbus
@@ -10,4 +10,4 @@ Restart=on-failure
 RestartSec=5
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target

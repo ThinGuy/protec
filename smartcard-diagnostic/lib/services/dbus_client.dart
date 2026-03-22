@@ -1,7 +1,7 @@
 import 'package:dbus/dbus.dart';
 
 class DBusSmartCardClient {
-  final DBusClient _sessionBus = DBusClient.session();
+  final DBusClient _systemBus = DBusClient.system();
   DBusRemoteObject? _remoteObject;
 
   static const String busName = 'com.canonical.SmartCardMonitor';
@@ -10,7 +10,7 @@ class DBusSmartCardClient {
 
   Future<void> connect() async {
     _remoteObject = DBusRemoteObject(
-      _sessionBus,
+      _systemBus,
       name: busName,
       path: DBusObjectPath(objectPath),
     );
@@ -36,6 +36,8 @@ class DBusSmartCardClient {
     return result.returnValues[0].asBoolean();
   }
 
+  /// Returns a flat string dict (a{ss}) with keys: type, atr, certs.
+  /// For full nested card data use getCardInfoJson().
   Future<Map<String, String>> getCardInfo() async {
     final result = await _remoteObject!.callMethod(
       interface,
@@ -46,6 +48,17 @@ class DBusSmartCardClient {
 
     final dbusDict = result.returnValues[0].asStringVariantDict();
     return dbusDict.map((key, value) => MapEntry(key, value.asString()));
+  }
+
+  /// Returns full card information as a JSON string.
+  Future<String> getCardInfoJson() async {
+    final result = await _remoteObject!.callMethod(
+      interface,
+      'GetCardInfoJson',
+      [],
+      replySignature: DBusSignature('s'),
+    );
+    return result.returnValues[0].asString();
   }
 
   Future<String> getHealthStatus() async {
@@ -70,7 +83,7 @@ class DBusSmartCardClient {
 
   Stream<DBusSignal> get cardInsertedSignal {
     return DBusSignalStream(
-      _sessionBus,
+      _systemBus,
       sender: busName,
       path: DBusObjectPath(objectPath),
       interface: interface,
@@ -80,7 +93,7 @@ class DBusSmartCardClient {
 
   Stream<DBusSignal> get cardRemovedSignal {
     return DBusSignalStream(
-      _sessionBus,
+      _systemBus,
       sender: busName,
       path: DBusObjectPath(objectPath),
       interface: interface,
@@ -89,6 +102,6 @@ class DBusSmartCardClient {
   }
 
   void close() {
-    _sessionBus.close();
+    _systemBus.close();
   }
 }

@@ -14,8 +14,8 @@ description: |
 
   Designed for Ubuntu Desktop and Ubuntu Core.
 
-grade: stable
-confinement: strict
+grade: devel
+confinement: devmode
 
 platforms:
   amd64:
@@ -34,7 +34,6 @@ apps:
       - hardware-observe
       - network
       - network-bind
-      - raw-usb
       - opengl
     environment:
       LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu:$SNAP/usr/lib
@@ -46,14 +45,14 @@ apps:
     restart-condition: always
     plugs:
       - hardware-observe
-      - raw-usb
+      - network
     slots:
       - dbus-smartcard
 
 slots:
   dbus-smartcard:
     interface: dbus
-    bus: session
+    bus: system
     name: com.canonical.SmartCardMonitor
 
 parts:
@@ -90,15 +89,18 @@ parts:
       mkdir -p $CRAFT_PART_INSTALL/bin
       cp smartcard_monitor.py $CRAFT_PART_INSTALL/bin/smartcard-monitor
       chmod +x $CRAFT_PART_INSTALL/bin/smartcard-monitor
+    organize:
+      com.canonical.SmartCardMonitor.service: usr/share/dbus-1/system-services/com.canonical.SmartCardMonitor.service
+      com.canonical.SmartCardMonitor.conf: usr/share/dbus-1/system.d/com.canonical.SmartCardMonitor.conf
 
   system-dependencies:
     plugin: nil
     stage-packages:
       - opensc
-      - pcscd
-      - libpam-pkcs11
       - opensc-pkcs11
-      - gnutls-bin
-      - libccid
       - pcsc-tools
       - libpcsclite1
+      # REMOVED: pcscd, libccid, libpam-pkcs11, gnutls-bin
+      # pcscd must NOT be bundled — use the host pcscd socket or the
+      # shared pcscd snap content interface. Two pcscd daemons cannot
+      # coexist on the same CCID reader.

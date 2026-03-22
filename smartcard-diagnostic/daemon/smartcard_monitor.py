@@ -67,38 +67,41 @@ def _run_cmd(cmd, timeout=CMD_TIMEOUT):
 
 
 def _detect_reader():
-    """Detect smart card reader using opensc-tool.
+    """Detect smart card reader using pcsc_scan.
+
+    Uses pcsc_scan -n (scan once, no card wait) which produces stable
+    'Reader N: <name>' output across all versions.  Falls back to
+    opensc-tool -l if pcsc_scan is unavailable.
 
     Returns dict with reader status information.
     """
+    # Primary: pcsc_scan -n — stable, version-independent output format
+    rc, stdout, stderr = _run_cmd(["pcsc_scan", "-n"])
+    if rc == 0 and stdout:
+        readers = []
+        for line in stdout.splitlines():
+            # pcsc_scan outputs: "Reader N: <reader name>"
+            if line.startswith("Reader"):
+                parts = line.split(":", 1)
+                if len(parts) == 2:
+                    name = parts[1].strip()
+                    if name:
+                        readers.append(name)
+        if readers:
+            return {"detected": True, "count": len(readers), "readers": readers}
+        if "No reader found" in stdout or "No reader found" in stderr:
+            return {"detected": False, "count": 0, "readers": []}
+
+    # Fallback: opensc-tool -l — kept only as a safety net
     rc, stdout, stderr = _run_cmd(["opensc-tool", "-l"])
     if rc != 0:
         if "No smart card readers found" in stderr or "No smart card readers found" in stdout:
             return {"detected": False, "count": 0, "readers": []}
-        return {"detected": False, "count": 0, "readers": [], "error": stderr or "opensc-tool failed"}
+        return {"detected": False, "count": 0, "readers": [], "error": stderr or "reader detection failed"}
 
-    readers = []
-    for line in stdout.splitlines():
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        # opensc-tool -l outputs lines like: "# 0  Reader Name"
-        # or "Detected readers (pcsc)" header lines
-        if line.lower().startswith("detected reader"):
-            continue
-        # Parse reader entries: lines starting with a number or "Nr."
-        if line.startswith("Nr."):
-            continue
-        # Typical format: " 0  Identiv SCR3310v2.0 00 00"
-        parts = line.split(None, 1)
-        if parts and parts[0].isdigit() and len(parts) > 1:
-            reader_name = parts[1].strip()
-            readers.append(reader_name)
-
-    if readers:
-        return {"detected": True, "count": len(readers), "readers": readers}
-
-    # Fallback: if we got output but couldn't parse reader names
+    # The only reliable token in opensc-tool -l output is "Detected readers"
+    # followed by reader lines.  We can't safely parse reader names here —
+    # instead just report that at least one reader is present.
     if stdout and "No smart card readers found" not in stdout:
         return {"detected": True, "count": 1, "readers": ["Unknown Reader"]}
 
@@ -317,11 +320,33 @@ class SmartCardMonitorService(dbus.service.Object):
         """Return whether a smart card is inserted."""
         return self._card_present
 
-    @dbus.service.method(DBUS_INTERFACE, out_signature="s")
+    @dbus.service.method(DBUS_INTERFACE, out_signature="a{ss}")
     def GetCardInfo(self):
-        """Return public card information as JSON.
+        """Return basic card information as a D-Bus string dict (a{ss}).
 
         Only returns public data - no PINs or private keys.
+        For richer / nested data use GetCardInfoJson().
+        """
+        if not self._card_present:
+            return {}
+        try:
+            info = _get_card_info()
+            return {
+                "type":  str(info.get("type", "unknown")),
+                "atr":   str(info.get("atr", "")),
+                "certs": str(len(info.get("certificates", []))),
+            }
+        except Exception as exc:
+            log.error("GetCardInfo failed: %s", exc)
+            return {"error": str(exc)}
+
+    @dbus.service.method(DBUS_INTERFACE, out_signature="s")
+    def GetCardInfoJson(self):
+        """Return full card information as a JSON string.
+
+        Use this method when the caller needs nested / complex card data
+        (certificate list, public key objects, etc.).  GetCardInfo()
+        returns only the flat a{ss} summary.
         """
         if not self._card_present:
             return json.dumps({"error": "no_card", "present": False})
@@ -329,7 +354,7 @@ class SmartCardMonitorService(dbus.service.Object):
             info = _get_card_info()
             return json.dumps(info)
         except Exception as exc:
-            log.error("GetCardInfo failed: %s", exc)
+            log.error("GetCardInfoJson failed: %s", exc)
             return json.dumps({"error": str(exc)})
 
     @dbus.service.method(DBUS_INTERFACE, out_signature="s")
@@ -456,8 +481,8 @@ def main():
     """Start the D-Bus smart card monitor service."""
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
-    session_bus = dbus.SessionBus()
-    bus_name = dbus.service.BusName(DBUS_BUS_NAME, session_bus)
+    system_bus = dbus.SystemBus()
+    bus_name = dbus.service.BusName(DBUS_BUS_NAME, system_bus)
     monitor = SmartCardMonitorService(bus_name)
 
     # Set up polling via GLib main loop
