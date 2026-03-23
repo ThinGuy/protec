@@ -80,6 +80,7 @@ READ BEFORE EVERY TASK:
 - All Python dependencies now from Ubuntu archives for Canonical supportability
 - CMAKE_INSTALL_PREFIX defaulted to /usr/local requiring root (fixed: relative DESTINATION paths + CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT guard)
 - native_assets/linux/ install rule failed when directory absent (fixed: guarded with install(CODE ...) + if(EXISTS) check)
+- CMakeLists.txt referenced main.cc at linux/ root but flutter create puts them in linux/runner/ (fixed: moved sources to runner/, created runner/CMakeLists.txt, parent uses add_subdirectory(runner))
 
 ## Next Steps
 1. User will retry snap build
