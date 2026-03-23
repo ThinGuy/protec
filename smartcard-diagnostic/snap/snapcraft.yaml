@@ -36,7 +36,7 @@ apps:
       - network-bind
       - opengl
     environment:
-      LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu:$SNAP/usr/lib
+      LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu:$SNAP/usr/lib:$SNAP_LIBRARY_PATH
       PATH: $SNAP/usr/bin:$SNAP/usr/sbin:$PATH
 
   monitor:
@@ -90,6 +90,7 @@ parts:
       - libgcc-s1
       - libpcre2-8-0
       - libstdc++6
+      - libegl1
 
   monitor-daemon:
     plugin: dump
