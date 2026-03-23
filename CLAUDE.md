@@ -81,6 +81,7 @@ READ BEFORE EVERY TASK:
 - CMAKE_INSTALL_PREFIX defaulted to /usr/local requiring root (fixed: relative DESTINATION paths + CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT guard)
 - native_assets/linux/ install rule failed when directory absent (fixed: guarded with install(CODE ...) + if(EXISTS) check)
 - CMakeLists.txt referenced main.cc at linux/ root but flutter create puts them in linux/runner/ (fixed: moved sources to runner/, created runner/CMakeLists.txt, parent uses add_subdirectory(runner))
+- runner/my_application.cc includes "flutter/generated_plugin_registrant.h" but compiler searched from runner/ not linux/ (fixed: added target_include_directories for CMAKE_SOURCE_DIR in runner/CMakeLists.txt)
 
 ## Next Steps
 1. User will retry snap build
