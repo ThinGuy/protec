@@ -73,6 +73,7 @@ parts:
       - xz-utils
     override-build: |
       flutter config --enable-linux-desktop
+      flutter precache --linux
       flutter pub get
       flutter build linux --release --target lib/main.dart
       mkdir -p $CRAFT_PART_INSTALL/bin
