@@ -90,6 +90,12 @@ parts:
       - libgcc-s1
       - libpcre2-8-0
       - libstdc++6
+      - libegl1
+      - libegl-mesa0
+      - libgl1
+      - libglx-mesa0
+      - libglx0
+      - libgles2
 
   monitor-daemon:
     plugin: dump
