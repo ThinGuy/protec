@@ -77,6 +77,34 @@ target_link_libraries(${BINARY_NAME} PRIVATE PkgConfig::GTK)
 # Run the Flutter tool portions of the build. This must not be removed.
 add_dependencies(${BINARY_NAME} flutter_assemble)
 
-# Only the install rules apply to the install target.
-install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
-  COMPONENT Runtime)
+# === Install Rules ===
+# Use relative DESTINATION paths so cmake --install --prefix <bundle> works
+# without requiring root. Absolute paths bake in the configure-time prefix
+# and silently ignore --prefix overrides at install time.
+
+# Ensure CMAKE_INSTALL_PREFIX falls back to the bundle directory when Flutter
+# does not pass -DCMAKE_INSTALL_PREFIX at configure time.
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/bundle"
+    CACHE PATH "Default install location" FORCE)
+endif()
+
+install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "." COMPONENT Runtime)
+
+install(FILES "${FLUTTER_ICU_DATA_FILE}" DESTINATION "." COMPONENT Runtime)
+
+install(FILES "${FLUTTER_LIBRARY}" DESTINATION "lib" COMPONENT Runtime)
+
+foreach(bundled_library ${PLUGIN_BUNDLED_LIBRARIES})
+  install(FILES "${bundled_library}"
+    DESTINATION "lib"
+    COMPONENT Runtime)
+endforeach(bundled_library)
+
+# Copy flutter_assets on each install to remove stale files.
+set(FLUTTER_ASSET_DIR_NAME "flutter_assets")
+install(CODE "
+  file(REMOVE_RECURSE \"${CMAKE_INSTALL_PREFIX}/${FLUTTER_ASSET_DIR_NAME}\")
+  " COMPONENT Runtime)
+install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
+  DESTINATION "." COMPONENT Runtime)
