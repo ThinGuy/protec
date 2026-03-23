@@ -1,0 +1,24 @@
+# Patch files
+*.patch
+
+# Build logs
+*.log
+build.log
+
+# Archives
+*.zip
+*.tar.gz
+*.tar.xz
+
+# Stray HTML
+*.html
+
+# Snap build artifacts
+parts/
+prime/
+stage/
+*.snap
+
+# OS
+.DS_Store
+Thumbs.db
