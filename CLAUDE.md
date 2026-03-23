@@ -1,7 +1,7 @@
 # ProTEC Project Status
 
 ## Last Updated
-2026-03-18
+2026-03-23
 
 ## Current Phase
 Phase 1: Smart Card Diagnostic Tool - CODE COMPLETE - Ready for user build and test
@@ -78,6 +78,8 @@ READ BEFORE EVERY TASK:
 - core24 requires 'platforms' instead of 'architectures' (fixed: changed to platforms syntax)
 - pip packages (pygobject, dbus-python) fail to compile in strict confinement (fixed: switched to Ubuntu archive packages python3-dbus, python3-gi)
 - All Python dependencies now from Ubuntu archives for Canonical supportability
+- CMAKE_INSTALL_PREFIX defaulted to /usr/local requiring root (fixed: relative DESTINATION paths + CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT guard)
+- native_assets/linux/ install rule failed when directory absent (fixed: guarded with install(CODE ...) + if(EXISTS) check)
 
 ## Next Steps
 1. User will retry snap build
