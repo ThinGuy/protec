@@ -75,6 +75,8 @@ parts:
       flutter config --enable-linux-desktop
       flutter precache --linux
       flutter pub get
+      # Regenerate linux/flutter/ephemeral/ for the build-snap Flutter SDK
+      flutter create --platforms=linux .
       flutter build linux --release --target lib/main.dart
       mkdir -p $CRAFT_PART_INSTALL/bin
       cp -r build/linux/x64/release/bundle/* $CRAFT_PART_INSTALL/bin/
