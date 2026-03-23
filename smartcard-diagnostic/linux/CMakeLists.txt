@@ -108,3 +108,15 @@ install(CODE "
   " COMPONENT Runtime)
 install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
   DESTINATION "." COMPONENT Runtime)
+
+# Install native assets only if the directory was created during the build.
+# Flutter 3.24+ expects this rule but the directory only exists when Dart
+# native assets are actually in use.
+install(CODE "
+  set(_native_assets_dir \"${PROJECT_BUILD_DIR}/native_assets/linux/\")
+  if(EXISTS \"\${_native_assets_dir}\")
+    file(INSTALL \"\${_native_assets_dir}\"
+      DESTINATION \"\${CMAKE_INSTALL_PREFIX}/lib\"
+      TYPE DIRECTORY)
+  endif()
+  " COMPONENT Runtime)
