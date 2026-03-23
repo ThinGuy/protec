@@ -56,16 +56,11 @@ slots:
     name: com.canonical.SmartCardMonitor
 
 parts:
-  flutter-setup:
+  smartcard-diagnostic:
     plugin: nil
     source: .
-    override-build: |
-      curl -fsSL https://fvm.app/install.sh | bash
-      export PATH="$HOME/.fvm/default/bin:$HOME/.pub-cache/bin:$PATH"
-      fvm install stable
-      fvm global stable
-      fvm flutter config --enable-linux-desktop
-      fvm flutter doctor
+    build-snaps:
+      - flutter/latest/stable
     build-packages:
       - clang
       - cmake
@@ -76,16 +71,10 @@ parts:
       - pkg-config
       - unzip
       - xz-utils
-    override-prime: ""
-
-  smartcard-diagnostic:
-    after: [flutter-setup]
-    plugin: nil
-    source: .
     override-build: |
-      export PATH="$HOME/.fvm/default/bin:$HOME/.pub-cache/bin:$PATH"
-      fvm flutter pub get
-      fvm flutter build linux --release --target lib/main.dart
+      flutter config --enable-linux-desktop
+      flutter pub get
+      flutter build linux --release --target lib/main.dart
       mkdir -p $CRAFT_PART_INSTALL/bin
       cp -r build/linux/x64/release/bundle/* $CRAFT_PART_INSTALL/bin/
       mv $CRAFT_PART_INSTALL/bin/smartcard_diagnostic $CRAFT_PART_INSTALL/bin/smartcard-diagnostic
