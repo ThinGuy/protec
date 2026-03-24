@@ -40,6 +40,10 @@ apps:
       PATH: $SNAP/usr/bin:$SNAP/usr/sbin:$PATH
       __EGL_VENDOR_LIBRARY_DIRS: $SNAP/usr/share/glvnd/egl_vendor.d
       LIBGL_DRIVERS_PATH: $SNAP/usr/lib/x86_64-linux-gnu/dri
+      GDK_PIXBUF_MODULE_FILE: $SNAP/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      GDK_PIXBUF_MODULEDIR: $SNAP/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+      XDG_DATA_DIRS: $SNAP/usr/share:$XDG_DATA_DIRS
+      GTK_MODULES: ""
 
   monitor:
     command: bin/smartcard-monitor
@@ -94,6 +98,37 @@ parts:
       - libstdc++6
       - libegl1
       - libegl-mesa0
+      - librsvg2-common
+      - shared-mime-info
+      - hicolor-icon-theme
+
+  gtk-loaders-cache:
+    plugin: nil
+    after: [smartcard-diagnostic]
+    override-prime: |
+      craftctl default
+      # Regenerate GdkPixbuf loaders.cache with snap-relative paths.
+      # The staged loaders.cache has host paths (/usr/lib/...) that do
+      # not resolve inside the snap mount.  We run gdk-pixbuf-query-loaders
+      # against the staged loaders and sed the output so that at runtime
+      # $SNAP/usr/lib/... resolves correctly via GDK_PIXBUF_MODULE_FILE.
+      LOADERS_DIR=usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+      CACHE_FILE=usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      if [ -d "$LOADERS_DIR" ]; then
+        ls "$LOADERS_DIR"/*.so 2>/dev/null | sed "s|^|/snap/smartcard-diagnostic/current/|" > "$CACHE_FILE.tmp" || true
+        # Use the staged binary to regenerate the cache
+        LD_LIBRARY_PATH="usr/lib/x86_64-linux-gnu" \
+          usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders \
+          "$LOADERS_DIR"/*.so > "$CACHE_FILE" 2>/dev/null || true
+        # Patch absolute paths to use the snap mount point
+        sed -i "s|$PWD/usr/|/snap/smartcard-diagnostic/current/usr/|g" "$CACHE_FILE" || true
+        rm -f "$CACHE_FILE.tmp"
+      fi
+      # Update MIME database for shared-mime-info
+      if [ -x usr/bin/update-mime-database ]; then
+        LD_LIBRARY_PATH="usr/lib/x86_64-linux-gnu" \
+          usr/bin/update-mime-database usr/share/mime 2>/dev/null || true
+      fi
 
   monitor-daemon:
     plugin: dump
