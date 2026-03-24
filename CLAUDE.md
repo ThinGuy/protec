@@ -83,6 +83,7 @@ READ BEFORE EVERY TASK:
 - CMakeLists.txt referenced main.cc at linux/ root but flutter create puts them in linux/runner/ (fixed: moved sources to runner/, created runner/CMakeLists.txt, parent uses add_subdirectory(runner))
 - runner/my_application.cc includes "flutter/generated_plugin_registrant.h" but compiler searched from runner/ not linux/ (fixed: added target_include_directories for CMAKE_SOURCE_DIR in runner/CMakeLists.txt)
 - snap run fails with "Couldn't open libEGL.so.1" (fixed: stage libegl1 dispatch loader only — not mesa/GL libs which shadow host drivers; added $SNAP_LIBRARY_PATH to LD_LIBRARY_PATH so dispatch loader finds host Mesa via opengl plug)
+- snap run fails with "No provider of eglGetPlatformDisplayEXT found" (fixed: prime-exclude libEGL_mesa*, libGLdispatch*, dri/, gbm/ from smartcard-diagnostic part so EGL dispatch loader uses host GPU stack exclusively via $SNAP_LIBRARY_PATH)
 
 ## Next Steps
 1. User will retry snap build
