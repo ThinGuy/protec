@@ -86,6 +86,7 @@ READ BEFORE EVERY TASK:
 - snap run fails with "No provider of eglGetPlatformDisplayEXT found" (fixed: prime-exclude libEGL_mesa*, libGLdispatch*, dri/, gbm/ from smartcard-diagnostic part so EGL dispatch loader uses host GPU stack exclusively via $SNAP_LIBRARY_PATH)
 - snap run fails with "libGLdispatch.so.0: cannot open shared object file" (fixed: removed libGLdispatch* from prime exclusions — libEGL.so.1 links against it; only exclude libEGL_mesa*, dri/, gbm/)
 - snap run fails with "No provider of eglGetPlatformDisplayEXT found" (final fix: /var/lib/snapd/lib/gl/ empty on Intel iGPU — snapd does not inject host GPU stack; staged full Mesa via libegl-mesa0, removed all prime exclusions so snap carries its own complete Mesa provider)
+- snap run still fails with "No provider of eglGetPlatformDisplayEXT found" (fixed: glvnd dispatch loader uses JSON files in /usr/share/glvnd/egl_vendor.d/ to find EGL vendors, not LD_LIBRARY_PATH; added __EGL_VENDOR_LIBRARY_DIRS and LIBGL_DRIVERS_PATH env vars to point at snap-internal paths)
 
 ## Next Steps
 1. User will retry snap build
