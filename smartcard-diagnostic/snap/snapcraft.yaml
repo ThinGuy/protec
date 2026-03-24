@@ -93,7 +93,6 @@ parts:
       - libegl1
     prime:
       - -usr/lib/x86_64-linux-gnu/libEGL_mesa*
-      - -usr/lib/x86_64-linux-gnu/libGLdispatch*
       - -usr/lib/x86_64-linux-gnu/dri/
       - -usr/lib/x86_64-linux-gnu/gbm/
 
