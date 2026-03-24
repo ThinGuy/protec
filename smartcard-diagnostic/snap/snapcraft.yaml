@@ -91,10 +91,7 @@ parts:
       - libpcre2-8-0
       - libstdc++6
       - libegl1
-    prime:
-      - -usr/lib/x86_64-linux-gnu/libEGL_mesa*
-      - -usr/lib/x86_64-linux-gnu/dri/
-      - -usr/lib/x86_64-linux-gnu/gbm/
+      - libegl-mesa0
 
   monitor-daemon:
     plugin: dump
